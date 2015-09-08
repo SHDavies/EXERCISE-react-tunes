@@ -30,7 +30,7 @@ var App = React.createClass({
           /* Griddle Component Goes Here */
         </div>
       </span>
-    )
+    );
   }
 });
 
