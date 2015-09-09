@@ -6,35 +6,37 @@ var SearchItunes = React.createClass({
     cb: React.PropTypes.func.isRequired
   },
   formatURL: function() {
-    return 'https://itunes.apple.com/search?term=' + this.refs.searchInput + '&entity=' + this.refs.selectInput;
+    return 'https://itunes.apple.com/search?term=' + this.refs.searchInput.getDOMNode().value + '&entity=' + this.refs.selectInput.getDOMNode().value;
   },
   handleSubmit: function(e) {
     $.ajax({
-      method: "JSONP",
-      url: this.formatURL,
+      headers: {'Access-Control-Allow-Origin': '*'},
+      dataType: "JSONP",
+      url: this.formatURL(),
       error: function(error) {
         console.log(error);
       },
-      success: function(results) {
-        this.props.cb(results.data);
-      }
-    }.bind(this));
+      success: function(data) {
+        this.props.cb(data.results);
+      }.bind(this)
+    });
+    this.refs.searchInput = '';
   },
   render: function(){
     return (
       <div className="row">
         <div className="col-sm-12">
           <div className="input-group-inline col-sm-4">
-            <input type="text" ref="searchInput" />
+            <input type="text" ref="searchInput" className="form-control"/>
           </div>
           <div className="input-group-inline col-sm-4">
-            <select ref="selectInput">
+            <select ref="selectInput" className="form-control">
               <option value="musicTrack">Music</option>
               <option value="movie">Movie</option>
             </select>
           </div>
           <div className="input-group-inline col-sm-4">
-            /*handleSubmit button goes here*/
+            <button onClick={this.handleSubmit} className="btn btn-primary">Get Info</button>
           </div>
         </div>
       </div>
